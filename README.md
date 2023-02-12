@@ -1,1 +1,1 @@
-# data_collection
+# The result of data collection in the date.json file

@@ -1,0 +1,47 @@
+require: rubocop-rspec
+
+RSpec/MessageChain:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Max: 5
+
+RSpec/MultipleExpectations:
+  Max: 5
+
+RSpec/ExampleLength:
+  Max: 10
+
+RSpec/MessageSpies:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - 'Gemfile'
+    - 'spec/**/*.rb'
+
+Metrics/LineLength:
+  Max: 120
+
+Documentation:
+  Enabled: false
+
+FrozenStringLiteralComment:
+  Enabled: false
+
+RSpec/FilePath:
+  Enabled: false
+
+RSpec/LeakyConstantDeclaration:
+  Enabled: false
+
+Lint/ConstantDefinitionInBlock:
+  Enabled: false
+
+Style/MixinUsage:
+  Enabled: 
+    - 'setup_capybara'
+
+RSpec/SubjectStub:
+  Enabled:
+    - 'spec/storage_spec'
