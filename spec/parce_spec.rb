@@ -5,22 +5,43 @@ RSpec.describe DataCollection::Parser do
 
   let(:user) { { 'email' => 'crimsonglow@i.ua', 'password' => 'e-bG7aYKV,WXebR' } }
 
-  context 'when a successful login' do
-    before do
-      ENV.merge!(user)
-      current_subject.log_in
+  describe 'log_in' do
+    before { ENV.merge!(user) }
+
+    context 'when the data is wrong' do
+      let(:user) { { 'email' => 'Error@i.ua', 'password' => 'e-bG7aYKV,WXebR' } }
+
+      it { expect { current_subject.log_in }.to raise_error(DataCollection::LogInError, 'Incorrect login information') }
     end
 
-    it { expect(page).to have_content('Top Questions') }
+    context 'when already log in' do
+      before { current_subject.log_in }
+
+      it { expect { current_subject.log_in }.to raise_error(DataCollection::LogInError, 'Already log in') }
+    end
+
+    context 'when success' do
+      it do
+        expect(page).to have_content('Top Questions')
+        expect(page).to have_no_link('Log in')
+      end
+    end
   end
 
-  context 'when the data collection takes place' do
+  context 'when move to the questions page' do
+    before { current_subject.move_to_the_questions_page }
+
+    it { expect(page).to have_content('All Questions') }
+  end
+
+  context 'when collecting usernames from questions' do
     before { current_subject.data_collection }
 
     it do
-      one_user = first(:xpath, './/time/preceding-sibling::div/div/a').text
+      one_user = first(:xpath, ".//time/preceding-sibling::div/div/a[contains(@href, 'users')]").text
 
       expect(current_subject.date.flatten).to include one_user
+      expect(current_subject.date.flatten.count).to be > 10
       expect(current_subject.date).to be_a Array
       expect(current_subject.date).not_to be_empty
     end

@@ -6,4 +6,5 @@ require 'json'
 require 'pry'
 
 module DataCollection
+  class LogInError < StandardError; end
 end
