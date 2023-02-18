@@ -1,12 +1,12 @@
 require_relative 'app/lib/data_collection'
 
-@users = DataCollection::Parser.new
+users = DataCollection::Parser.new
 begin
-  @users.log_in
-  @users.move_to_the_questions_page
-rescue DataCollection::LogInError => e
+  users.log_in
+  users.move_to_the_questions_page
+rescue DataCollection::AlreadyLogIn, DataCollection::IncorrectLogInInformation => e
   puts e.message
 end
-@users.data_collection
+users.data_collection
 
-DataCollection::Storage.new(@users.date).data_record
+DataCollection::Storage.new(users.date).data_record

@@ -11,13 +11,15 @@ RSpec.describe DataCollection::Parser do
     context 'when the data is wrong' do
       let(:user) { { 'email' => 'Error@i.ua', 'password' => 'e-bG7aYKV,WXebR' } }
 
-      it { expect { current_subject.log_in }.to raise_error(DataCollection::LogInError, 'Incorrect login information') }
+      it do
+        expect { current_subject.log_in }.to raise_error(DataCollection::IncorrectLogInInformation)
+      end
     end
 
     context 'when already log in' do
       before { current_subject.log_in }
 
-      it { expect { current_subject.log_in }.to raise_error(DataCollection::LogInError, 'Already log in') }
+      it { expect { current_subject.log_in }.to raise_error(DataCollection::AlreadyLogIn) }
     end
 
     context 'when success' do

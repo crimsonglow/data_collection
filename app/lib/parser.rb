@@ -10,13 +10,13 @@ module DataCollection
 
     def log_in
       visit('https://stackoverflow.com/')
-      raise LogInError, 'Already log in' if already_log_in?
+      raise AlreadyLogIn if already_log_in?
 
       click_on('Log in', wait: 1)
       find(:xpath, '//input[@id="email"]').set(email)
       find(:xpath, '//input[@id="password"]').set(password)
       click_button('Log in', wait: 1)
-      raise LogInError, 'Incorrect login information' if email_password_incorrect?
+      raise IncorrectLogInInformation if email_password_incorrect?
     end
 
     def move_to_the_questions_page
@@ -35,7 +35,7 @@ module DataCollection
     private
 
     def email_password_incorrect?
-      has_content?('The email or password is incorrect.')
+      has_content?(Constants::LogIn::INCORRECT_INPUT_DATE)
     end
 
     def already_log_in?
