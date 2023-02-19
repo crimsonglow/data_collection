@@ -35,7 +35,7 @@ module DataCollection
     private
 
     def email_password_incorrect?
-      has_content?(Constants::LogIn::INCORRECT_INPUT_DATE)
+      has_content?(Constants::Messages::LOG_IN_ERROR[:incorrect_input_date])
     end
 
     def already_log_in?
