@@ -13,6 +13,8 @@ module DataCollection
       raise AlreadyLogIn if already_log_in?
 
       click_on('Log in', wait: 1)
+      page_load_items?(xpath: '//input[@id="email"]')
+
       find(:xpath, '//input[@id="email"]').set(email)
       find(:xpath, '//input[@id="password"]').set(password)
       click_button('Log in', wait: 1)
@@ -33,6 +35,13 @@ module DataCollection
     end
 
     private
+
+    def page_load_items?(xpath: './/header/div/a', css: 'span', text: 'Stack Overflow', attempts: 2)
+      until (has_xpath?(xpath) && has_css?(css) && has_text?(text)) || attempts < 1
+        refresh && attempts - 1
+      end
+      raise FailedLoadPage if attempts <= 0
+    end
 
     def email_password_incorrect?
       has_content?(Constants::Messages::LOG_IN_ERROR[:incorrect_input_date])

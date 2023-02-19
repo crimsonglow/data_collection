@@ -4,7 +4,7 @@ users = DataCollection::Parser.new
 begin
   users.log_in
   users.move_to_the_questions_page
-rescue DataCollection::AlreadyLogIn, DataCollection::IncorrectLogInInformation => e
+rescue DataCollection::AlreadyLogIn, DataCollection::IncorrectLogInInformation, FailedLoadPage => e
   puts e.message
 end
 users.data_collection

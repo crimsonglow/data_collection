@@ -7,6 +7,14 @@ require 'json'
 require 'pry'
 
 module DataCollection
+  class FailedLoadPage < StandardError
+    include Constants::Messages
+
+    def initialize
+      super(FAILED_LOAD_PAGE)
+    end
+  end
+
   class AlreadyLogIn < StandardError
     include Constants::Messages
 
