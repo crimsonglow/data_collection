@@ -7,11 +7,11 @@ require 'json'
 require 'pry'
 
 module DataCollection
-  class AlreadyLogIn < StandardError
+  class LogInError < StandardError
     include Constants::Messages
 
     def initialize
-      super(LOG_IN_ERROR[:already_log_in])
+      super(LOG_IN_ERROR[:some_error])
     end
   end
 
