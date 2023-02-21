@@ -24,11 +24,30 @@ module DataCollection
     end
 
     def data_collection
-      date << usernames_selection
-      return unless pages_left?
+      number_pages ||= find_all(:xpath, './/a[contains(@href, "/questions?tab=bounties&page=")]', text: /\d/).last.text.to_i
+       while number_pages > 1
+        date << usernames_selection
+        move_to_the_next_page
+        number_pages -= 1
+      end
 
-      move_to_the_next_page
-      data_collection
+      while pages_left? && date.last !=  usernames_selection
+        date << usernames_selection
+        move_to_the_next_page
+      end
+
+      while date.last !=  usernames_selection
+        date << usernames_selection
+        return unless pages_left?
+
+        move_to_the_next_page
+      end
+
+      # date << usernames_selection
+      # return unless pages_left?
+
+      # move_to_the_next_page
+      # data_collection
     end
 
     private
@@ -42,9 +61,10 @@ module DataCollection
     end
 
     def usernames_selection
-      user_data_in_the_question = find_all(:xpath, './/time/preceding-sibling::div')
-      usernames = user_data_in_the_question.map { |i| i.find(:xpath, ".//a[contains(@href, 'users')]").text }
-      usernames.reject(&:empty?)
+      find("#questions").find_all(:xpath, ".//a[contains(@href, '/users/')]", text: /\w/).map(&:text)
+
+      # all_questions_on_page = find_all(:xpath, ".//div[contains(@id, 'question-summary')]")
+      # usernames = all_questions_on_page.map { |i| i.find(:xpath, ".//a[contains(@href, '/users/')]", text: /\w/).text }
     end
 
     def pages_left?
