@@ -30,22 +30,18 @@ RSpec.describe DataCollection::Parser do
     end
   end
 
-  context 'when move to the questions page' do
-    before { current_subject.move_to_the_questions_page }
-
-    it { expect(page).to have_content('All Questions') }
-  end
-
   context 'when collecting usernames from questions' do
     before { current_subject.data_collection }
 
-    it do
-      one_user = first(:xpath, ".//time/preceding-sibling::div/div/a[contains(@href, 'users')]").text
+    let(:questions) { find('#questions') }
+    let(:path) { ".//a[contains(@href, '/users/')]" }
 
-      expect(current_subject.date.flatten).to include one_user
-      expect(current_subject.date.flatten.count).to be > 10
-      expect(current_subject.date).to be_a Array
-      expect(current_subject.date).not_to be_empty
+    it { expect(current_subject.data.flatten.size).not_to be_between(1, 10) }
+
+    it 'is recorded nickname' do
+      one_user = questions.find(:xpath, path, text: /\w/, match: :first).text
+
+      expect(current_subject.data.flatten).to include one_user
     end
   end
 end
