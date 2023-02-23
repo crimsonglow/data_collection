@@ -25,7 +25,7 @@ RSpec.describe DataCollection::Parser do
     end
 
     context 'when the user is successfully log in' do
-      it 'is no errors' do
+      it 'are no errors' do
         expect { current_subject.log_in }.not_to raise_error
       end
     end
