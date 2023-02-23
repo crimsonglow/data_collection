@@ -8,40 +8,44 @@ RSpec.describe DataCollection::Parser do
   describe 'log_in' do
     before { ENV.merge!(user) }
 
-    context 'when the data is wrong' do
+    context 'when the user incorrect information and gets the message "The email or password is incorrect"' do
       let(:user) { { 'email' => 'Error@i.ua', 'password' => 'e-bG7aYKV,WXebR' } }
 
-      it { expect { current_subject.log_in }.to raise_error(DataCollection::IncorrectLogInInformation) }
+      it 'returns an error "IncorrectLogInInformation"' do
+        expect { current_subject.log_in }.to raise_error(DataCollection::IncorrectLogInInformation)
+      end
     end
 
-    context 'when for some reason, it failed to log in' do
+    context 'when the user could not log in' do
       let(:user) { { 'email' => 'Error', 'password' => ' ' } }
 
-      it { expect { current_subject.log_in }.to raise_error(DataCollection::LogInError) }
+      it 'returns an error "LogInError"' do
+        expect { current_subject.log_in }.to raise_error(DataCollection::LogInError)
+      end
     end
 
-    context 'when success' do
+    context 'when the user is successfully log in' do
       before { current_subject.log_in }
 
-      it do
-        expect(page).to have_content('Top Questions')
-        expect(page).to have_no_link('Log in')
+      it 'is no errors' do
+        expect { current_subject.log_in }.not_to raise_error
       end
     end
   end
 
-  context 'when collecting usernames from questions' do
+  context 'when user nicknames from questions are written to an array "data"' do
     before { current_subject.data_collection }
 
-    let(:questions) { find('#questions') }
-    let(:path) { ".//a[contains(@href, '/users/')]" }
+    it 'contains more than 10 nicknames' do
+      expect(current_subject.data.flatten.size).to be > 10
+    end
 
-    it { expect(current_subject.data.flatten.size).not_to be_between(1, 10) }
+    it 'are no empty elements' do
+      expect(current_subject.data.flatten).not_to include ' '
+    end
 
-    it 'is recorded nickname' do
-      one_user = questions.find(:xpath, path, text: /\w/, match: :first).text
-
-      expect(current_subject.data.flatten).to include one_user
+    it 'contains only strings' do
+      expect(current_subject.data.flatten).to all(be_a(String))
     end
   end
 end

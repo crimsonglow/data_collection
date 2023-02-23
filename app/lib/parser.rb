@@ -20,36 +20,28 @@ module DataCollection
     end
 
     def data_collection
-      move_to_the_questions_page
-      filter_tab_by_bountied
-      try_to_show_50_items
+      find(:xpath, ".//span[text()='Questions']").click
+      find(:xpath, ".//div[text()='Bountied']").click
+      show_50_items_if_available
 
       pages_count.times do
         data << usernames_selection
 
-        try_move_to_the_next_page
+        click_next_page_if_present
       end
     end
 
     private
 
     def email_password_incorrect?
-      has_content?(Constants::Messages::LOG_IN_ERROR[:incorrect_input_date])
+      has_content?('The email or password is incorrect.')
     end
 
     def log_in_successful?
-      has_no_link?('Log in') && has_xpath?('.//a[@title="Help Center and other resources"]')
+      has_xpath?('.//a[@title="Help Center and other resources"]')
     end
 
-    def move_to_the_questions_page
-      find(:xpath, ".//span[text()='Questions']").click
-    end
-
-    def filter_tab_by_bountied
-      find(:xpath, ".//div[text()='Bountied']").click
-    end
-
-    def try_to_show_50_items
+    def show_50_items_if_available
       show_more = 'Show 50 items per page'
       click_link(show_more) if has_link?(show_more)
     end
@@ -60,10 +52,10 @@ module DataCollection
     end
 
     def usernames_selection
-      find('#questions').find_all(:xpath, ".//a[contains(@href, '/users/')]", text: /\w/).map(&:text)
+      find_all(:xpath, ".//div[@id='questions']//a[contains(@href, '/users/')]", text: /\w/).map(&:text)
     end
 
-    def try_move_to_the_next_page
+    def click_next_page_if_present
       next_page_pointer = 'Next'
       click_link(next_page_pointer, wait: 1) if has_link?(next_page_pointer)
     end
