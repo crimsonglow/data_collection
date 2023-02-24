@@ -31,10 +31,10 @@ RSpec.describe DataCollection::Parser do
     end
   end
 
-  context 'when user nicknames from questions are written to an array "data"' do
+  context 'when the parser fetches nickname data from questions' do
     before { current_subject.data_collection }
 
-    it 'contains more than 10 nicknames' do
+    it 'returns an array with more than 10 nicknames' do
       expect(current_subject.data.flatten.size).to be > 10
     end
 
