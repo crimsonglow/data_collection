@@ -38,11 +38,11 @@ RSpec.describe DataCollection::Parser do
       expect(current_subject.data.flatten.size).to be > 10
     end
 
-    it 'are no empty elements' do
+    it 'returns an array without empty elements' do
       expect(current_subject.data.flatten).not_to include ' '
     end
 
-    it 'contains only strings' do
+    it 'returns an array with string elements' do
       expect(current_subject.data.flatten).to all(be_a(String))
     end
   end
